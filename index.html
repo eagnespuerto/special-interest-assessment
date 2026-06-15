@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<title>Special Interest Assessment</title>
+<style>
+  :root{
+    color-scheme:light;
+    --bg:#fcfbf7; --panel:#ffffff; --panel2:#f8f6f1;
+    --ink:#22262c; --muted:#71757c; --line:#e6e2da;
+    --accent:#2f5d5a; --accent-soft:#e7efee;
+    --good:#3f7d4f; --warn:#b07d2b; --bad:#b0463a;
+    --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{background:var(--bg)}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:var(--sans);line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .page{background:var(--bg);min-height:100dvh;padding:28px 18px 48px}
+  .wrap{max-width:620px;margin:0 auto}
+
+  header{margin:8px 0 22px}
+  .eyebrow{
+    font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--accent);font-weight:600;margin:0 0 8px;
+  }
+  h1{font-family:var(--serif);font-weight:600;font-size:1.9rem;line-height:1.15;margin:0 0 8px;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:.92rem;margin:0;max-width:48ch}
+
+  .card{
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:22px;margin:16px 0;
+  }
+
+  label{display:block;font-size:.78rem;font-weight:600;color:var(--ink);margin:0 0 7px;letter-spacing:.01em}
+  input[type=text]{
+    width:100%;padding:11px 12px;border-radius:7px;border:1px solid var(--line);
+    background:var(--panel2);color:var(--ink);font-size:1rem;font-family:var(--sans);outline:none;
+    transition:border-color .15s,background .15s;
+  }
+  input[type=text]:focus{border-color:var(--accent);background:#fff}
+  .row{display:flex;gap:14px;flex-wrap:wrap}
+  .row>div{flex:1;min-width:200px}
+
+  .btn{
+    width:100%;padding:13px;border:1px solid var(--accent);border-radius:8px;
+    background:var(--accent);color:#fff;font-weight:600;font-size:.95rem;
+    font-family:var(--sans);cursor:pointer;transition:opacity .15s;
+  }
+  .btn:hover{opacity:.92}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--accent)}
+  .btn.ghost:hover{background:var(--accent-soft);opacity:1}
+
+  /* professional-help notice */
+  .notice{
+    border:1px solid var(--line);border-left:3px solid var(--accent);
+    background:var(--accent-soft);border-radius:6px;
+    padding:13px 15px;margin:18px 0 4px;font-size:.84rem;color:#2c3a39;
+  }
+  .notice b{color:var(--ink)}
+
+  .start-hint{color:var(--muted);font-size:.82rem;margin:16px 0 0}
+
+  /* quiz */
+  .meter{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+  .track{flex:1;height:3px;background:var(--line);border-radius:99px;overflow:hidden}
+  .track>i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s}
+  .count{font-size:.75rem;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+
+  .q{padding:18px 0;border-bottom:1px solid var(--line)}
+  .q:first-of-type{padding-top:8px}
+  .q:last-of-type{border-bottom:none}
+  .qtext{font-size:.96rem;margin:0 0 13px}
+  .qnum{font-family:var(--serif);color:var(--accent);margin-right:8px;font-style:italic}
+  .scale{display:flex;gap:7px}
+  .scale button{
+    flex:1;padding:9px 3px;border:1px solid var(--line);background:#fff;
+    color:var(--muted);border-radius:6px;cursor:pointer;font-size:.72rem;line-height:1.2;
+    transition:all .12s;
+  }
+  .scale button.on{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
+  .scale button:hover{border-color:var(--accent)}
+
+  #resultBtn{margin-top:22px}
+
+  /* result */
+  .gauge{text-align:center;padding:4px 0 8px}
+  .score{font-family:var(--serif);font-size:3.4rem;font-weight:600;line-height:1}
+  .score small{font-size:1.05rem;color:var(--muted);font-family:var(--sans)}
+  .glabel{font-size:.74rem;letter-spacing:.04em;color:var(--muted);text-transform:uppercase;margin:6px 0 0}
+  .verdict{font-family:var(--serif);font-size:1.3rem;font-weight:600;margin:14px 0 0}
+
+  /* signature: weighing spectrum */
+  .spectrum{margin:18px 0 6px}
+  .bar{height:8px;border-radius:99px;position:relative;
+    background:linear-gradient(90deg,#6a9e74 0%,#cdab63 50%,#bf7a6e 100%);}
+  .bar>i{position:absolute;top:50%;width:14px;height:14px;border-radius:50%;
+    background:#fff;border:2px solid var(--ink);transform:translate(-50%,-50%);
+    box-shadow:0 1px 4px rgba(0,0,0,.25);}
+  .ends{display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted);margin-top:7px}
+
+  .blurb{font-size:.95rem;margin:16px 0 0}
+  .flags-title{font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:18px 0 8px}
+  .reasons{margin:0;padding-left:18px}
+  .reasons li{margin:7px 0;font-size:.9rem;color:var(--ink)}
+  .tally{font-size:.88rem;color:var(--muted);margin-top:14px}
+  .tally b{color:var(--ink)}
+
+  .summary{
+    background:var(--panel2);border:1px solid var(--line);border-radius:8px;
+    padding:14px;margin-top:16px;font-size:.82rem;white-space:pre-wrap;
+    color:var(--ink);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;line-height:1.5;
+  }
+  .btnrow{display:flex;gap:10px;margin-top:16px}
+  .btnrow .btn{margin-top:0}
+
+  /* history */
+  .hist h2{font-family:var(--serif);font-size:1.15rem;font-weight:600;margin:0 0 6px}
+  .hist .lead{font-size:.83rem;color:var(--muted);margin:0 0 12px}
+  .hitem{display:flex;justify-content:space-between;align-items:center;gap:10px;
+    padding:12px 0;border-bottom:1px solid var(--line);font-size:.9rem}
+  .hitem:last-of-type{border-bottom:none}
+  .hitem .meta{color:var(--muted);font-size:.76rem;margin-top:2px}
+  .pill{font-family:var(--serif);font-weight:600;padding:3px 11px;border-radius:99px;font-size:.82rem;color:#fff}
+  .del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.2rem;line-height:1;padding:2px 4px}
+  .del:hover{color:var(--bad)}
+
+  .disclaimer{font-size:.76rem;color:var(--muted);text-align:center;margin-top:24px;line-height:1.6;max-width:52ch;margin-left:auto;margin-right:auto}
+
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);
+    background:var(--ink);color:#fff;padding:10px 18px;border-radius:99px;
+    font-size:.84rem;font-weight:500;opacity:0;transition:opacity .2s;pointer-events:none}
+  .toast.show{opacity:1}
+
+  .hidden{display:none}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="wrap">
+  <header>
+    <p class="eyebrow">A self-reflection tool</p>
+    <h1>Special Interest Assessment</h1>
+    <p class="sub">Twenty questions to help you weigh a new interest against its real effect on your social life — now and further down the road.</p>
+  </header>
+
+  <!-- INTRO -->
+  <div class="card" id="intro">
+    <div class="row">
+      <div>
+        <label for="name">Your name</label>
+        <input type="text" id="name" placeholder="e.g. Alexis" autocomplete="off">
+      </div>
+      <div>
+        <label for="interest">The interest or hobby</label>
+        <input type="text" id="interest" placeholder="e.g. doll collecting, philosophy, LEGO" autocomplete="off">
+      </div>
+    </div>
+    <div class="notice">
+      <b>This is just an online self-assessment.</b> It can help you notice patterns, but it can't see your full situation. If a hobby is affecting your relationships, work, or wellbeing — or you simply want to talk it through — please reach out to a counselor, therapist, or another mental-health professional.
+    </div>
+    <p class="start-hint">Answer honestly — there are no right answers, only useful ones.</p>
+    <button class="btn" id="startBtn" disabled style="margin-top:14px">Start assessment</button>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="card hist hidden" id="history"></div>
+
+  <!-- QUIZ -->
+  <div class="card hidden" id="quiz">
+    <div class="meter">
+      <div class="track"><i id="bar"></i></div>
+      <span class="count" id="counter">0 / 20</span>
+    </div>
+    <div id="questions"></div>
+    <button class="btn" id="resultBtn" disabled>See my result</button>
+  </div>
+
+  <!-- RESULT -->
+  <div class="card hidden" id="result"></div>
+
+  <p class="disclaimer">A self-reflection aid, not professional, medical, or clinical advice. It does not diagnose anything. If you're struggling, talking with a qualified professional is always the better step.</p>
+</div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const Q = [
+    {t:"{name} can name at least one close friend or family member who would happily hear about {interest}.", rev:true},
+    {t:"In the past month, {interest} has caused {name} to cancel, skip, or shorten time with people who matter.", rev:false},
+    {t:"{name} would still feel okay about life if {interest} suddenly became impossible.", rev:true},
+    {t:"{name} finds it hard to stop thinking about {interest} even during conversations with others.", rev:false},
+    {t:"{name} has a budget or limit for {interest} and mostly sticks to it.", rev:true},
+    {t:"People close to {name} have expressed concern about how much time or money goes into {interest}.", rev:false},
+    {t:"{interest} has actually introduced {name} to new people or a community.", rev:true},
+    {t:"{name} feels irritated or defensive when someone interrupts {interest}.", rev:false},
+    {t:"{name} can comfortably go a few days without {interest} without feeling restless.", rev:true},
+    {t:"{name} has hidden how much they spend on or do with {interest} from others.", rev:false},
+    {t:"{interest} leaves {name} with enough energy and time for work, sleep, and basic responsibilities.", rev:true},
+    {t:"{name} chooses {interest} over social invitations more often than not.", rev:false},
+    {t:"{name} can talk about things other than {interest} and enjoy doing so.", rev:true},
+    {t:"{name} feels {interest} is the main thing that makes them interesting or worthwhile.", rev:false},
+    {t:"If a friend pointed out {interest} was crowding out other parts of life, {name} could hear it without shutting down.", rev:true},
+    {t:"{name}'s sleep, meals, or health have slipped because of {interest}.", rev:false},
+    {t:"{interest} adds to {name}'s life rather than replacing relationships or other interests.", rev:true},
+    {t:"{name} feels lonelier or more isolated since {interest} became a big focus.", rev:false},
+    {t:"A year from now, {name} expects {interest} to still leave room for the people they care about.", rev:true},
+    {t:"{name} would feel embarrassed if people knew the full extent of their involvement in {interest}.", rev:false},
+  ];
+  const labels=["Strongly disagree","Disagree","Neutral","Agree","Strongly agree"];
+  const KEY="sia_history_v1";
+  let name="",interest="",answers=new Array(Q.length).fill(null);
+  const $=id=>document.getElementById(id);
+  const nameI=$("name"),interestI=$("interest"),startBtn=$("startBtn");
+
+  function checkIntro(){ startBtn.disabled=!(nameI.value.trim()&&interestI.value.trim()); }
+  nameI.addEventListener("input",checkIntro);
+  interestI.addEventListener("input",checkIntro);
+
+  function esc(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+  function fill(t){return t.replaceAll("{name}","<b>"+esc(name)+"</b>").replaceAll("{interest}","<b>"+esc(interest)+"</b>");}
+  function stripTags(s){return s.replace(/<[^>]*>/g,"");}
+
+  startBtn.addEventListener("click",()=>{
+    name=nameI.value.trim();interest=interestI.value.trim();
+    $("intro").classList.add("hidden");$("history").classList.add("hidden");
+    $("quiz").classList.remove("hidden");renderQuestions();
+  });
+
+  function renderQuestions(){
+    const c=$("questions");c.innerHTML="";
+    Q.forEach((q,i)=>{
+      const div=document.createElement("div");div.className="q";
+      const scale=labels.map((l,v)=>`<button data-q="${i}" data-v="${v}">${l}</button>`).join("");
+      div.innerHTML=`<p class="qtext"><span class="qnum">${i+1}.</span>${fill(q.t)}</p><div class="scale">${scale}</div>`;
+      c.appendChild(div);
+    });
+    c.querySelectorAll(".scale button").forEach(b=>{
+      b.addEventListener("click",()=>{
+        answers[+b.dataset.q]=+b.dataset.v;
+        b.parentElement.querySelectorAll("button").forEach(x=>x.classList.remove("on"));
+        b.classList.add("on");updateProgress();
+      });
+    });
+    updateProgress();
+  }
+  function updateProgress(){
+    const done=answers.filter(a=>a!==null).length;
+    $("bar").style.width=(done/Q.length*100)+"%";
+    $("counter").textContent=`${done} / ${Q.length}`;
+    $("resultBtn").disabled=done<Q.length;
+  }
+  $("resultBtn").addEventListener("click",showResult);
+
+  const tiers=[
+    {max:33,verdict:"Pursue it — it's enriching your life",color:"var(--good)",emoji:"🟢",
+     blurb:()=>`${esc(name)}, ${esc(interest)} looks like a genuine positive. It's adding to your world without crowding out the people in it. Keep going, and keep the same self-awareness you showed here.`},
+    {max:60,verdict:"Pursue it — but build in some balance",color:"var(--warn)",emoji:"🟡",
+     blurb:()=>`${esc(name)}, ${esc(interest)} is mostly healthy, but a few answers suggest it's starting to pull on your time, money, or relationships. You don't need to stop — just set a couple of gentle guardrails so it stays a source of joy, not friction.`},
+    {max:101,verdict:"Pause and reflect before going deeper",color:"var(--bad)",emoji:"🔴",
+     blurb:()=>`${esc(name)}, several answers suggest ${esc(interest)} may be costing you socially in ways that could compound over time. That doesn't mean it's bad — but it's worth slowing down, talking to someone you trust, and deciding deliberately rather than drifting deeper.`}
+  ];
+
+  function showResult(){
+    let risk=0;answers.forEach((a,i)=>{risk+=Q[i].rev?(4-a):a;});
+    const pct=Math.round(risk/(Q.length*4)*100);
+    const tier=tiers.find(t=>pct<t.max);
+
+    const flags=answers.map((a,i)=>({i,r:Q[i].rev?(4-a):a})).filter(x=>x.r>=3).sort((a,b)=>b.r-a.r).slice(0,3);
+    const flagHtml=flags.length
+      ? `<p class="flags-title">Worth paying attention to</p><ul class="reasons">${flags.map(f=>`<li>${fill(Q[f.i].t)}</li>`).join("")}</ul>`
+      : `<p class="tally" style="margin-top:18px"><b style="color:var(--good)">No major warning signs stood out.</b> Nice balance.</p>`;
+    const strengths=answers.map((a,i)=>({i,r:Q[i].rev?(4-a):a})).filter(x=>x.r<=1).length;
+
+    const flagText=flags.length?"Worth watching:\n"+flags.map(f=>"- "+stripTags(fill(Q[f.i].t))).join("\n"):"No major warning signs stood out.";
+    const summary=`Special Interest Assessment ${tier.emoji}
+${name} — interest: ${interest}
+
+Social-cost score: ${pct}/100 (lower is healthier)
+Verdict: ${tier.verdict}
+
+${flagText}
+
+${strengths}/${Q.length} clearly healthy answers.
+(Self-reflection tool — not a substitute for professional advice.)`;
+
+    const hist=load();hist.unshift({name,interest,pct,verdict:tier.verdict,date:Date.now()});save(hist.slice(0,25));
+
+    $("quiz").classList.add("hidden");
+    const r=$("result");r.classList.remove("hidden");
+    r.innerHTML=`
+      <div class="gauge">
+        <div class="score" style="color:${tier.color}">${pct}<small> / 100</small></div>
+        <p class="glabel">Social-cost score · lower is healthier</p>
+        <div class="verdict" style="color:${tier.color}">${tier.verdict}</div>
+      </div>
+      <div class="spectrum">
+        <div class="bar"><i style="left:${pct}%"></i></div>
+        <div class="ends"><span>Enriching</span><span>Costly</span></div>
+      </div>
+      <p class="blurb">${tier.blurb()}</p>
+      ${flagHtml}
+      <p class="tally">You gave <b>${strengths}</b> clearly healthy answer${strengths===1?"":"s"} out of ${Q.length}.</p>
+      <div class="notice"><b>Remember:</b> this is an online assessment, not a professional opinion. If anything here worries you, a counselor or therapist can help you think it through properly.</div>
+      <div class="summary">${esc(summary)}</div>
+      <div class="btnrow">
+        <button class="btn" id="shareBtn">Share / copy summary</button>
+        <button class="btn ghost" id="again">Retake</button>
+      </div>`;
+    $("again").addEventListener("click",()=>location.reload());
+    $("shareBtn").addEventListener("click",()=>shareSummary(summary));
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+
+  function shareSummary(text){
+    if(navigator.share){navigator.share({title:"Special Interest Assessment",text}).catch(()=>{});}
+    else{copy(text);}
+  }
+  function copy(text){
+    (navigator.clipboard?.writeText(text)??Promise.reject()).then(()=>toast("Summary copied")).catch(()=>{
+      const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();
+      try{document.execCommand("copy");toast("Summary copied");}catch(e){toast("Copy failed");}ta.remove();
+    });
+  }
+  function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1600);}
+
+  function load(){try{return JSON.parse(localStorage.getItem(KEY))||[];}catch(e){return[];}}
+  function save(h){try{localStorage.setItem(KEY,JSON.stringify(h));}catch(e){}}
+  function pillColor(v){return v.indexOf("Pause")===0?"var(--bad)":v.indexOf("balance")>-1?"var(--warn)":"var(--good)";}
+
+  function renderHistory(){
+    const h=load(),box=$("history");
+    if(!h.length){box.classList.add("hidden");return;}
+    box.classList.remove("hidden");
+    box.innerHTML=`<h2>Past assessments</h2><p class="lead">Saved on this device, in your browser only.</p>`+
+      h.map((r,i)=>{
+        const d=new Date(r.date).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"});
+        return `<div class="hitem">
+          <div><div><b>${esc(r.interest)}</b></div><div class="meta">${esc(r.name)} · ${d}</div></div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="pill" style="background:${pillColor(r.verdict)}">${r.pct}</span>
+            <button class="del" data-i="${i}" title="Delete" aria-label="Delete">×</button>
+          </div></div>`;
+      }).join("")+
+      `<button class="btn ghost" id="clearHist" style="margin-top:16px">Clear all history</button>`;
+    box.querySelectorAll(".del").forEach(b=>b.addEventListener("click",()=>{
+      const h2=load();h2.splice(+b.dataset.i,1);save(h2);renderHistory();
+    }));
+    $("clearHist").addEventListener("click",()=>{if(confirm("Delete all saved assessments?")){save([]);renderHistory();}});
+  }
+
+  checkIntro();renderHistory();
+})();
+</script>
+</body>
+</html>
