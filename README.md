@@ -1,4 +1,10 @@
 # special-interest-assessment
+
+[![license](https://img.shields.io/badge/license-CC0-blue)](LICENSE)
+[![made with](https://img.shields.io/badge/made%20with-HTML5-E34F26?logo=html5&logoColor=white)](https://github.com/eagnespuerto/special-interest-assessment)
+[![website](https://img.shields.io/badge/website-live-brightgreen)](https://eagnespuerto.github.io/special-interest-assessment/)
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-support%20me-FF5E5B?logo=kofi&logoColor=white)](https://ko-fi.com/eagnespuerto)
+[![Linktree](https://img.shields.io/badge/Linktree-soitsagnes-43E55E?logo=linktree&logoColor=white)](https://linktr.ee/soitsagnes)
 A static page that allows the user to assess a special interest against twenty questions that ask about potential social and financial consequences.
 
 Access on https://eagnespuerto.github.io/special-interest-assessment/
